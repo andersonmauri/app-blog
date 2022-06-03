@@ -1,16 +1,27 @@
-import react from "react";
+import react, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Button, SafeAreaView, TouchableOpacity } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from '@expo/vector-icons'
+import api from '../../Services/api'
 
 export default function Home() {
     const navigation = useNavigation();
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        async function loadData() {
+            const category = api.get('/api/categories?populate=icon')
+            setCategories(category.data.data)
+        }
+        loadData();
+    }, [])
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.name}>Dev Blog</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                     <Feather name="search" size={24} color='#fff' />
                 </TouchableOpacity>
             </View>
